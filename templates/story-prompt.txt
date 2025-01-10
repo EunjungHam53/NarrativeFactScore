@@ -1,0 +1,43 @@
+Read part of a story, then identify named entities and generate knowledge graph edges.
+
+<Important Instructions>
+- Do not use or refer to the content, names, or entities from the example provided below in your response.
+- Only apply the process of identifying named entities and generating knowledge graph edges to the new story excerpt provided.
+
+<Example> (for reference only, do not use in your response):
+[Begin story excerpt]
+"Christmas won't be Christmas without any presents," grumbled Jo. "It's so dreadful to be poor!" sighed Meg, looking out the window at the snow-covered streets of Concord. "I don't think it's fair for some girls to have plenty of pretty things, and other girls nothing at all," added little Amy, with an injured sniff. "We've got Father and Mother, and each other," said Beth contentedly from her corner. The four young faces brightened at the cheerful words, but darkened again as Jo said sadly, "We haven't got Father, and shall not have him for a long time." She didn't say "perhaps never," but each silently added it, thinking of Father far away, where the fighting was.
+As young readers like to know 'how people look', we will take this moment to give them a little sketch of the four sisters. Margaret March, the eldest of the four, was sixteen, and very pretty, with large eyes, plenty of soft brown hair, a sweet mouth, and white hands. Fifteen-year-old Jo March was very tall, thin, and brown, and never seemed to know what to do with her long limbs. Elizabeth, or Beth, as everyone called her, was a rosy, smooth-haired, bright-eyed girl of thirteen, with a shy manner, a timid voice, and a peaceful expression which was seldom disturbed. Amy, the youngest, was a regular snow maiden, with blue eyes, and yellow hair curling on her shoulders.
+The clock struck six and, having swept up the hearth, Beth put a pair of slippers down to warm. Somehow the sight of the old shoes had a good effect upon the girls, for Mother was coming, and everyone brightened to welcome her. Jo sat up to hold the slippers nearer to the blaze. "They are quite worn out. Marmee must have a new pair." "I thought I'd get her some with my dollar," said Beth. "No, I shall!" cried Amy. "I'll tell you what we'll do," said Beth, "let's each get her something for Christmas, and not get anything for ourselves." "Let Marmee think we are getting things for ourselves, and then surprise her. We must go shopping tomorrow afternoon," said Jo, marching up and down.
+"Glad to find you so merry, my girls," said a cheery voice at the door, and the girls turned to welcome a tall, motherly lady. She was not elegantly dressed, but the girls thought the gray cloak and unfashionable bonnet covered the most splendid mother in the world. As they gathered about the table, Mrs. March said, with a particularly happy face, "I've got a treat for you after supper." A quick, bright smile went round like a streak of sunshine. Beth clapped her hands, and Jo tossed up her napkin, crying, "A letter! A letter! Three cheers for Father!" "Yes, a nice long letter. He is well, and he sends all sorts of loving wishes for Christmas, and an especial message to you girls," said Mrs. March, patting her pocket as if she had got a treasure there. "I think it was so splendid in Father to go as chaplain when he was too old to be drafted, and not strong enough for a soldier," said Meg warmly, proud of her father's work with the Union Army.
+[End story excerpt]
+
+Named entities (include all aliases and name variations):
+Jo / Jo March
+Meg / Margaret / Margaret March
+Amy
+Beth / Elizabeth
+March sisters
+Mrs. March / Marmee / Mother
+Father
+Concord
+Union Army
+
+Knowledge graph edges (select up to 20 most important, `subject(s); predicate; [object(s)]` format, named entities only, predicate(relation): two words or fewer):
+1. Jo, Meg, Amy, Beth; in; March sisters
+2. March sisters; daughters of; Mrs. March, Father
+3. Mrs. March; mother of; March sisters
+4. Father; father of; March sisters
+5. March sisters, Mrs. March; living in; Concord
+6. Father; fighting in war
+7. Father; chaplain in; Union Army
+8. Meg; sixteen years
+9. Jo; fifteen years
+10. Beth; thirteen years
+11. Beth; shy
+12. Amy; youngest among; March sisters
+
+<Request>
+[Begin story excerpt]
+{STORY}
+[End story excerpt]

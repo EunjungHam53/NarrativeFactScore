@@ -1,0 +1,5 @@
+I will give you a summary from a chunk of movie script.
+Your task is to provide me with a list of atomic facts expressed in the given summary.
+Each atomic fact should be described in a name-only third-person format.
+Please separate each atomic fact with a `\n`.
+Summary: {}

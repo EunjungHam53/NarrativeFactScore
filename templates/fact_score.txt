@@ -1,0 +1,9 @@
+Consider the given statement, the related scene, and the relationship subgraph.
+Indicate whether the statement is supported by the scene and the relationship subgraph.
+Negation of a false statement should be considered supported.
+If the statement is true, output 1.
+If the statement is false, output the reason why it is false.
+Scene: {}
+Relationship Subgraph: {}
+Statement: {}
+Output:
