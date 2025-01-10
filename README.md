@@ -11,7 +11,7 @@ NarrativeFactScore is a novel "Agent-as-a-Judge" framework for evaluating and re
 NarrativeFactScore addresses two major limitations in existing evaluation metrics for long narrative summarization:
 
 <p align="center">
-  <img src="assets/motivation.png" width="200px"/>
+  <img src="assets/motivation.png" width="300px"/>
   <br>
 </p>
 
