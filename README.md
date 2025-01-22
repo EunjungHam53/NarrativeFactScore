@@ -3,10 +3,10 @@
 NarrativeFactScore is a novel "Agent-as-a-Judge" framework for evaluating and refining summaries of long narratives. The framework provides factual assessment by leveraging Character Knowledge Graph (CKG) and offers actionable guidance for improving summary quality.
 
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/yeonseokjeong/NarrativeFactScore)
-[![Paper](https://img.shields.io/badge/Paper-PDF-red)](TBD)
+[![Paper](https://img.shields.io/badge/Paper-PDF-red)](https://arxiv.org/abs/2501.09993)
 
 
-## What is NarrativeFactScore? 🤔
+## 🤔 What is NarrativeFactScore?
 
 NarrativeFactScore addresses two major limitations in existing evaluation metrics for long narrative summarization:
 
@@ -41,7 +41,7 @@ Our framework consists of three key components:
    - Uses feedback to guide summary improvements
    - Iteratively refines summaries to enhance factual accuracy
 
-## Setup ⚙️
+## ⚙️ Setup
 
 1. Install requirements:
 ```bash
@@ -65,7 +65,7 @@ sh 0_down_data.sh MovieSum test
    OPENAI_API_KEY=your_api_key_here
    ```
 
-## Quick Start 🚀
+## 🚀 Quick Start
 
 1. Build Knowledge Graph:
 ```bash
@@ -103,13 +103,19 @@ sh 5_calculate_metrics.sh MovieSum test 0
 This step calculates additional evaluation metrics including ROUGE, BERTScore, BLEU, and BARTScore to comprehensively assess the summary quality.
 
 
-## Citation 📝
+## 📝 Citation
 
 If you find our work useful, please consider citing our paper:
 ```bibtex
-[Citation will be added upon publication]
+@article{jeong2025agentasjudge,
+  title={Agent-as-Judge for Factual Summarization of Long Narratives},
+  author={Jeong, Yeonseok and Kim, Minsoo and Hwang, Seung-won and Kim, Byung-Hak},
+  journal={arXiv preprint arXiv:2501.09993},
+  year={2025},
+  url={https://arxiv.org/abs/2501.09993}
+}
 ```
 
-## Contact 📧
+## 📧 Contact
 
 For questions and discussions, please open an issue in this repository.
