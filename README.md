@@ -1,4 +1,4 @@
-# NarrativeFactScore 🔥
+# 🔥 NarrativeFactScore
 
 NarrativeFactScore is a novel "Agent-as-a-Judge" framework for evaluating and refining summaries of long narratives. The framework provides factual assessment by leveraging Character Knowledge Graph (CKG) and offers actionable guidance for improving summary quality.
 
@@ -111,8 +111,7 @@ If you find our work useful, please consider citing our paper:
   title={Agent-as-Judge for Factual Summarization of Long Narratives},
   author={Jeong, Yeonseok and Kim, Minsoo and Hwang, Seung-won and Kim, Byung-Hak},
   journal={arXiv preprint arXiv:2501.09993},
-  year={2025},
-  url={https://arxiv.org/abs/2501.09993}
+  year={2025}
 }
 ```
 
