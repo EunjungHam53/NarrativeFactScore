@@ -7,9 +7,10 @@ from pysbd import Segmenter
 from tiktoken import Encoding
 
 from .knowledge_graph import PROMPT_FILE_PATH
-from .openai_api import (RESPONSES_DIRECTORY_PATH,
-                        get_max_chapter_segment_token_count,
-                        get_openai_model_encoding, save_openai_api_response)
+from .openai_api import save_openai_api_response
+from config import MAX_INPUT_TOKENS, MAX_OUTPUT_TOKENS
+
+RESPONSES_DIRECTORY_PATH = Path('../openai-api-responses-new')
 from .utils import (execute_function_in_parallel, set_up_logging,
                    strip_and_remove_empty_strings)
 
@@ -136,7 +137,7 @@ def get_response_save_path(idx, save_path, project_gutenberg_id,
     return save_path
 
 
-def save_openai_api_responses_for_script(script, prompt, encoding, max_chapter_segment_token_count, idx, save_path):
+def save_openai_api_responses_for_script(script, prompt, idx, save_path):
     """Call the OpenAI API for each chapter segment in a script and save the responses to JSON files."""
     project_gutenberg_id = script['id']
     chapter_count = len(script['chapters'])
@@ -170,13 +171,6 @@ def save_openai_api_responses_for_script(script, prompt, encoding, max_chapter_s
 
 
 def save_triples_for_scripts(input_data, idx, save_path):
-    """Call the OpenAI API to generate knowledge graph nodes and edges, and save the responses to JSON files."""
-    
-    # 1) load data
     script = input_data
-
-    # 2) call OpenAI API
     prompt = PROMPT_FILE_PATH.read_text()
-    max_chapter_segment_token_count = get_max_chapter_segment_token_count(prompt)
-    encoding = get_openai_model_encoding()
-    save_openai_api_responses_for_script(script, prompt, encoding, max_chapter_segment_token_count, idx, save_path)
+    save_openai_api_responses_for_script(script, prompt, idx, save_path)

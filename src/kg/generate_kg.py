@@ -5,8 +5,6 @@ from pathlib import Path
 import json
 import argparse
 import os
-import google.generativeai as genai
-import time
 import numpy as np
 
 import networkx as nx
@@ -14,7 +12,11 @@ from pyvis.network import Network
 from tqdm import tqdm
 from contextlib import redirect_stdout
 
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+import google.generativeai as genai
+from config import GEMINI_API_KEY, GEMINI_MODEL
+import time
+
+genai.configure(api_key=GEMINI_API_KEY)
 
 from .knowledge_graph import generate_knowledge_graph
 from .openai_api import load_response_text
@@ -26,27 +28,24 @@ KNOWLEDGE_GRAPHS_DIRECTORY_PATH = Path('../knowledge-graphs_new')
 
 
 def gpt_inference(system_instruction, prompt, retries=10, delay=5):
-    """Use Gemini API instead of OpenAI"""
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
-    # Kết hợp system instruction và prompt
-    full_prompt = f"{system_instruction}\n\n{prompt}"
+    combined_prompt = f"{system_instruction}\n\n{prompt}"
     
     for attempt in range(retries):
         try:
+            model = genai.GenerativeModel(GEMINI_MODEL)
             response = model.generate_content(
-                full_prompt,
+                combined_prompt,
                 generation_config=genai.types.GenerationConfig(
                     temperature=0.0,
                     max_output_tokens=128,
+                    top_p=0.5
                 )
             )
-            return response.text
+            result = response.text
+            return result
         except Exception as e:
-            print(f"Attempt {attempt+1} failed: {e}")
             time.sleep(delay)
             continue
-    return ""
 
 
 def generate_knowledge_graph_for_scripts(book, idx, save_path):
