@@ -3,10 +3,9 @@ import logging
 import os
 from pathlib import Path
 
-import openai
 from dotenv import load_dotenv
-from openai.error import (APIError, RateLimitError, ServiceUnavailableError,
-                          Timeout, APIConnectionError, InvalidRequestError)
+import google.generativeai as genai
+from google.api_core import exceptions as google_exceptions
 from tenacity import (before_sleep_log, retry, retry_if_exception_type,
                       stop_after_delay, wait_random_exponential, stop_after_attempt)
 from tiktoken import Encoding, encoding_for_model
@@ -14,9 +13,9 @@ from tiktoken import Encoding, encoding_for_model
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
-OPENAI_MODEL_ID = 'gpt-4o-mini-2024-07-18'
+# OPENAI_MODEL_ID = 'gpt-4o-mini-2024-07-18'
 # This value is set by OpenAI for the selected model and cannot be changed.
 MAX_MODEL_TOKEN_COUNT = 4096
 # This value can be changed.
@@ -46,34 +45,54 @@ def get_max_chapter_segment_token_count(prompt: str) -> int:
     return max_chapter_segment_token_count
 
 
-@retry(retry=retry_if_exception_type((APIError, Timeout, RateLimitError,
-                                      ServiceUnavailableError, APIConnectionError, InvalidRequestError)),
+@retry(retry=retry_if_exception_type((google_exceptions.ResourceExhausted, 
+                                      google_exceptions.ServiceUnavailable,
+                                      google_exceptions.DeadlineExceeded)),
        wait=wait_random_exponential(max=60), stop=stop_after_attempt(10),
        before_sleep=before_sleep_log(logger, logging.WARNING))
-def save_openai_api_response(prompt_messages,
-                             save_path):
-    """Use a prompt to make a request to the OpenAI API and save the response to a JSON file."""
+def save_openai_api_response(prompt_messages, save_path):
+    """Use Gemini API instead of OpenAI"""
     try:
-        logger.info(f'Calling OpenAI API and saving response to {save_path}...')
-        response = openai.ChatCompletion.create(
-            model=OPENAI_MODEL_ID, messages=prompt_messages, temperature=0)
-        finish_reason = response.choices[0].finish_reason
-        if finish_reason != 'stop':
-            logger.error(f'`finish_reason` is `{finish_reason}` for {save_path}.')
-        save_data = {'model': response.model, 'usage': response.usage,
-                     'finish_reason': finish_reason,
-                     'prompt_messages': prompt_messages,
-                     'response': response.choices[0].message.content}
-    except InvalidRequestError:
-        logger.error(f'InvalidRequestError encountered 10 times. Returning empty string for {save_path}.')
-        save_data = {'model': None, 'usage': None,
-                     'finish_reason': 'invalid_request',
-                     'prompt_messages': prompt_messages,
-                     'response': ' '}
+        logger.info(f'Calling Gemini API and saving response to {save_path}...')
+        
+        # Khởi tạo model
+        model = genai.GenerativeModel(OPENAI_MODEL_ID)
+        
+        # Lấy prompt từ messages (OpenAI format)
+        prompt = prompt_messages[0]['content']
+        
+        # Gọi Gemini API
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.0,
+                max_output_tokens=MAX_RESPONSE_TOKEN_COUNT,
+            )
+        )
+        
+        response_text = response.text
+        finish_reason = 'stop' if response.candidates[0].finish_reason.name == 'STOP' else 'other'
+        
+        save_data = {
+            'model': OPENAI_MODEL_ID, 
+            'usage': {'prompt_tokens': 0, 'completion_tokens': 0},  # Gemini không trả về usage
+            'finish_reason': finish_reason,
+            'prompt_messages': prompt_messages,
+            'response': response_text
+        }
+    except Exception as e:
+        logger.error(f'Error encountered: {e}. Returning empty string for {save_path}.')
+        save_data = {
+            'model': None, 
+            'usage': None,
+            'finish_reason': 'error',
+            'prompt_messages': prompt_messages,
+            'response': ' '
+        }
+    
     save_path.parent.mkdir(parents=True, exist_ok=True)
     with open(save_path, 'w') as save_file:
         json.dump(save_data, save_file, indent=4, ensure_ascii=False)
-
 
 def load_response_text(save_path):
     """Load the response text from a JSON file containing response data from the OpenAI API."""

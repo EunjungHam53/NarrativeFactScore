@@ -12,7 +12,6 @@ from nltk import sent_tokenize
 from sentence_transformers import util
 from FlagEmbedding import BGEM3FlagModel
 import logging
-import openai
 from openai.error import (APIError, RateLimitError, ServiceUnavailableError,
                           Timeout, APIConnectionError, InvalidRequestError)
 from tenacity import (before_sleep_log, retry, retry_if_exception_type,
@@ -21,11 +20,13 @@ from .utils import break_down2scenes
 from .prompt import build_fact_prompt
 from .openai_api import openai_api_response
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
 logger = logging.getLogger(__name__)
 
+import google.generativeai as genai
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
 class NarrativeFactScore():
-    def __init__(self, device="cuda:0", model="gpt-4o-mini-2024-07-18", split_type="gpt", checkpoint=None):
+    def __init__(self, device="cuda:0", model="gemini-1.5-flash", split_type="gpt", checkpoint=None):
         self.sent_model = BGEM3FlagModel('BAAI/bge-m3', use_fp16=True)
         self.model = model
         self.device = device
@@ -136,24 +137,24 @@ class NarrativeFactScore():
         return all_scores, all_scores_per_sent, all_relevant_scenes, all_summary_chunks, all_feedback_list
 
 class GPTScore():
-    def __init__(self, model="gpt-4o-mini-2024-07-18", prompt='./templates/fact_score.txt'):
-        # Set up model
-        self.max_length = 1024
+    def __init__(self, model="gemini-1.5-flash", prompt='./templates/fact_score.txt'):
         self.model = model
         self.prompt = prompt
+        self.gemini_model = genai.GenerativeModel(model)
     
-    @retry(retry=retry_if_exception_type((APIError, Timeout, RateLimitError,
-                                        ServiceUnavailableError, APIConnectionError, InvalidRequestError)),
-        wait=wait_random_exponential(max=60), stop=stop_after_attempt(10),
-        before_sleep=before_sleep_log(logger, logging.WARNING))
+    @retry(retry=retry_if_exception_type((google_exceptions.ResourceExhausted,)),
+           wait=wait_random_exponential(max=60), stop=stop_after_attempt(10),
+           before_sleep=before_sleep_log(logger, logging.WARNING))
     def gpt_inference(self, prompt):
-        prompt_messages = [{"role": "user", "content": prompt}]
         try:
-            response = openai.ChatCompletion.create(model = self.model, messages = prompt_messages, temperature = 0)
-            response = response.choices[0].message.content
-        except InvalidRequestError:
-            response = 1
-        return response
+            response = self.gemini_model.generate_content(
+                prompt,
+                generation_config=genai.types.GenerationConfig(temperature=0.0)
+            )
+            return response.text
+        except Exception as e:
+            print(f"Gemini API error: {e}")
+            return "1"  # Default score nếu lỗi
 
     def gpt_score(self, srcs, tgts, kgs, batch_size=4):
         ### Taken from 

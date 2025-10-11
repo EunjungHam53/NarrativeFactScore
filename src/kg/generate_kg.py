@@ -5,7 +5,7 @@ from pathlib import Path
 import json
 import argparse
 import os
-import openai
+import google.generativeai as genai
 import time
 import numpy as np
 
@@ -14,7 +14,7 @@ from pyvis.network import Network
 from tqdm import tqdm
 from contextlib import redirect_stdout
 
-
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
 from .knowledge_graph import generate_knowledge_graph
 from .openai_api import load_response_text
@@ -26,27 +26,27 @@ KNOWLEDGE_GRAPHS_DIRECTORY_PATH = Path('../knowledge-graphs_new')
 
 
 def gpt_inference(system_instruction, prompt, retries=10, delay=5):
-    openai.api_key = os.getenv('OPENAI_API_KEY')
-    messages = [{"role": "system", "content": system_instruction}, 
-                {"role": "user", "content": prompt}]
+    """Use Gemini API instead of OpenAI"""
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    
+    # Kết hợp system instruction và prompt
+    full_prompt = f"{system_instruction}\n\n{prompt}"
     
     for attempt in range(retries):
         try:
-            response = openai.ChatCompletion.create(
-                model='gpt-4o-mini-2024-07-18',
-                messages=messages,
-                temperature=0.0,
-                max_tokens=128,
-                top_p=0.5,
-                frequency_penalty=0,
-                presence_penalty=0
+            response = model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.0,
+                    max_output_tokens=128,
+                )
             )
-            result = response['choices'][0]['message']['content']
-            return result
-        except openai.error.APIError as e:
-            
+            return response.text
+        except Exception as e:
+            print(f"Attempt {attempt+1} failed: {e}")
             time.sleep(delay)
             continue
+    return ""
 
 
 def generate_knowledge_graph_for_scripts(book, idx, save_path):
