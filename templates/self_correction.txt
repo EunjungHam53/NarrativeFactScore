@@ -1,8 +1,7 @@
-Below is a part of the script from the titled movie.
-- Script: {}
-Based on the 'Statement to Revise' and 'Reason for Revision,' create a 'Revised Summary' of the 'Summary of the Script.'
-Keep the revised summary concise and similar in length to the original summary.
-Do not directly copy any part of the 'Script.'
-If the 'Summary of the Script' is accurate, generate the original summary as is.
-- Summary of the Script: {}
-- Revised Summary:
+Script: {}
+
+Original Summary: {}
+
+Revise the summary to be accurate with the script. Keep it short (2-5 sentences).
+
+Revised Summary:

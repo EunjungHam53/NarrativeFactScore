@@ -1,8 +1,5 @@
-This is a part of a script from a Movie. Read the following content carefully, then answer my question:
-{}
-The script has ended now.
+Summarize this movie script in 2-5 sentences. Focus on: what characters do, how they feel, what happens.
 
-Please summarize the content:
-- Provide a detailed summary of the key characters' actions, emotions, and situations as reflected in the dialogue or context.
-- Clearly state the outcome of the events.
-- The summary should be between 2 to 5 sentences long.
+Script: {}
+
+Summary:

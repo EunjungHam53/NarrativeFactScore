@@ -34,57 +34,88 @@ def remove_number_prefix(text):
 
 def parse_response_text(response_text, identifier, are_edges_numbered=True):
     """
-    Parse a response text from the OpenAI model into names (a list of names for
-    each entity) and edges (relations between entities). `identifier` is a
-    string used to identify the response text in error messages.
+    Parse a response text from the Gemini model into names and edges.
     """
-    lines = strip_and_remove_empty_strings(response_text.split('\n'))
-    if 'Named entities' not in lines[0]:
-        logger.error(f'{identifier}: First line of response text does not '
-                     f'start with "Named entities:". ("{lines[0]}")')
+    # Clean up response
+    response_text = response_text.strip()
+    if not response_text:
+        logger.error(f'{identifier}: Empty response.')
         return [], []
-    mode = 'names'
+    
+    lines = strip_and_remove_empty_strings(response_text.split('\n'))
+    
+    if not lines:
+        logger.error(f'{identifier}: No lines in response.')
+        return [], []
+    
+    # Find sections
+    names_idx = -1
+    edges_idx = -1
+    
+    for i, line in enumerate(lines):
+        if 'Named entities' in line or 'named entities' in line.lower():
+            names_idx = i
+        if 'Knowledge graph edges' in line or 'knowledge graph' in line.lower():
+            edges_idx = i
+    
+    if names_idx == -1:
+        logger.error(f'{identifier}: No "Named entities" section found.')
+        return [], []
+    
+    if edges_idx == -1:
+        logger.error(f'{identifier}: No "Knowledge graph edges" section found.')
+        return [], []
+    
+    # Parse names section
     names = []
-    edges = []
-    for line in lines[1:]:
-        if 'Knowledge graph edges' in line:
-            mode = 'edges'
+    for line in lines[names_idx + 1:edges_idx]:
+        line = line.strip()
+        if not line or line.startswith('#'):
             continue
-        if mode == 'names':
-            if line.startswith('-'):
-                line = line[1:]
+        if line.startswith('-'):
+            line = line[1:].strip()
+        if line:
             name_group = strip_and_remove_empty_strings(line.split(' / '))
-            name_group = [remove_number_prefix(name) for name in name_group]
-            names.append(name_group)
-        elif mode == 'edges':
-            if are_edges_numbered:
-                if not re.match(r'^\d{1,2}\. ', line):
-                    break
-                if int(line.split('.')[0]) > MAX_RESPONSE_EDGE_COUNT:
-                    break;
-                line = line[3:]
-            edge_components = strip_and_remove_empty_strings(line.split(';'))
-            if len(edge_components) not in (2, 3):
-                continue
-            subjects = strip_and_remove_empty_strings(
-                edge_components[0].split(','))
-            predicate = edge_components[1]
-            if len(edge_components) == 3:
-                objects = strip_and_remove_empty_strings(
-                    edge_components[2].split(','))
-            else:
-                objects = [None]
-            for subject, object_ in product(subjects, objects):
-                edge = (subject, predicate, object_)
-                edges.append(edge)
+            if name_group:
+                names.append(name_group)
+    
+    # Parse edges section
+    edges = []
+    for line in lines[edges_idx + 1:]:
+        line = line.strip()
+        if not line:
+            continue
+        
+        # Remove number prefix if exists
+        if line and line[0].isdigit():
+            line = re.sub(r'^\d+\.\s*', '', line)
+        
+        # Split by semicolon
+        parts = [p.strip() for p in line.split(';')]
+        
+        if len(parts) < 2:
+            continue
+        
+        if len(parts) == 2:
+            subjects = [p.strip() for p in parts[0].split(',')]
+            predicate = parts[1]
+            objects = [None]
+        elif len(parts) >= 3:
+            subjects = [p.strip() for p in parts[0].split(',')]
+            predicate = parts[1]
+            objects = [p.strip() for p in parts[2].split(',')]
+        
+        for subject in subjects:
+            for obj in objects:
+                if subject and predicate:
+                    edges.append((subject, predicate, obj))
+    
     if not names:
-        logger.error(f'{identifier}: No names were parsed from the response '
-                     f'text.')
+        logger.warning(f'{identifier}: No entities parsed.')
     if not edges:
-        logger.error(f'{identifier}: No edges were parsed from the response '
-                     f'text.')
+        logger.warning(f'{identifier}: No edges parsed.')
+    
     return names, edges
-
 
 def generate_names_graph(names):
     """
