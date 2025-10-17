@@ -36,7 +36,6 @@ def parse_response_text(response_text, identifier, are_edges_numbered=True):
     """
     Parse a response text from the Gemini model into names and edges.
     """
-    # Clean up response
     response_text = response_text.strip()
     if not response_text:
         logger.error(f'{identifier}: Empty response.')
@@ -48,14 +47,17 @@ def parse_response_text(response_text, identifier, are_edges_numbered=True):
         logger.error(f'{identifier}: No lines in response.')
         return [], []
     
-    # Find sections
+    # Tìm sections - hỗ trợ cả tiếng Anh và tiếng Việt
     names_idx = -1
     edges_idx = -1
     
     for i, line in enumerate(lines):
-        if 'Named entities' in line or 'named entities' in line.lower():
+        line_lower = line.lower()
+        if any(keyword in line_lower for keyword in 
+               ['named entities', 'thực thể được đặt tên', 'các thực thể']):
             names_idx = i
-        if 'Knowledge graph edges' in line or 'knowledge graph' in line.lower():
+        if any(keyword in line_lower for keyword in 
+               ['knowledge graph', 'đồ thị kiến thức', 'các cạnh']):
             edges_idx = i
     
     if names_idx == -1:

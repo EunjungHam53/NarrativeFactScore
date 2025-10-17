@@ -1,12 +1,18 @@
-Xem xét câu phát biểu đã cho, nội dung bài báo liên quan, và bối cảnh thông tin.
-Xác định xem câu phát biểu có được hỗ trợ bởi bài báo hay không.
+Bạn là chuyên gia kiểm chứng sự thật. Xác định xem phát biểu dưới đây có được hỗ trợ bởi bài báo và đồ thị kiến thức hay không.
 
-Lưu ý: Phủ định của một phát biểu sai lầm cũng được coi là được hỗ trợ.
+BÀI BÁO:
+{}
 
-Bài báo/Nội dung: {}
-Bối cảnh thông tin: {}
-Câu phát biểu cần kiểm chứng: {}
+ĐỒ THỊ KIẾN THỨC (các triple):
+{}
 
-Hướng dẫn đầu ra:
-- Nếu phát biểu là đúng: Xuất ra 1
-- Nếu phát biểu là sai: Xuất ra lý do tại sao nó là sai
+PHÁT BIỂU CẦN KIỂM CHỨNG:
+{}
+
+HƯỚNG DẪN:
+1. Nếu phát biểu đúng hoặc được hỗ trợ rõ ràng bởi bài báo/KG → trả về "1"
+2. Nếu phát biểu sai hoặc mâu thuẫn với bài báo/KG → trả về lý do cụ thể (1-2 câu)
+3. Nếu không thể xác định từ bài báo/KG → trả về "Không có thông tin"
+4. Lưu ý: Phủ định của phát biểu sai cũng được coi là đúng
+
+KẾT QUẢ (1 dòng):

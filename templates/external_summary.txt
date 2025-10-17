@@ -1,11 +1,15 @@
-Đây là một phần nội dung từ một bài báo/tin tức. Hãy đọc nội dung sau một cách cẩn thận, sau đó trả lời câu hỏi của tôi:
+Bạn là chuyên gia tóm tắt bài báo tin tức tiếng Việt. Hãy đọc bài báo dưới đây và viết bản tóm tắt.
 
+BÀI BÁO:
 {}
 
-Nội dung bài báo đã kết thúc.
+HƯỚNG DẪN VIẾT TÓM TẮT:
+- Độ dài: 3-5 câu
+- Nội dung bắt buộc:
+  1. Sản phẩm/dịch vụ/sự kiện chính là gì?
+  2. Thông số kỹ thuật, giá cả, hoặc đặc điểm nổi bật là gì?
+- Luôn sử dụng dạng thứ ba (không dùng "tôi", "chúng ta")
+- Chỉ lấy thông tin từ bài báo, không thêm kiến thức bên ngoài
+- Viết rõ ràng, tránh từ ngữ mơ hồ
 
-Vui lòng tóm tắt nội dung:
-- Nêu rõ những thông tin chính về sản phẩm, dịch vụ hoặc sự kiện được đề cập.
-- Đề cập đến các thông số kỹ thuật, giá cả hoặc đặc điểm nổi bật (nếu có).
-- Giải thích tình hình thị trường hoặc vị thế cạnh tranh của sản phẩm/dịch vụ.
-- Bản tóm tắt nên dài từ 3 đến 5 câu.
+BẢN TÓM TẮT (3-5 câu):

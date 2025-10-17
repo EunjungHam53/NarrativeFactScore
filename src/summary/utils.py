@@ -110,7 +110,7 @@ def chunk_script_gpt(script:str,
                 end = start+chunk_size
             
             chunk = encoding.decode(tokenized_script[start:end])
-            chunks.append(chunk)
+        chunks.append(chunk)
     print(f"Num of chunks : {len(chunks)}")
     return chunks
 

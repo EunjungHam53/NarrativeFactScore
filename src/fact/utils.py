@@ -16,7 +16,8 @@ def break_down2scenes(text: str):
     current_scene_number = None
     for i in range(0, len(scenes), 2):  # Process scene number and corresponding text as pairs
         scene_marker = scenes[i].strip()
-        try:scene_number = int(scene_marker.split('#')[1])  # Extract only the number
+        try:
+            scene_number = int(scene_marker.split('#')[1])  # Extract only the number
         except:
             if len(scenes) % 2 == 1:
                 return [scenes[0]]

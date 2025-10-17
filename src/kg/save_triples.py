@@ -75,20 +75,25 @@ def combine_text_subunits_into_segments(subunits, join_string,
     return segments
 
 
-def split_long_sentences(sentences, encoding: Encoding,
-                         max_token_count):
-    """Given a list of sentences, split sentences that exceed a maximum number of tokens into multiple segments."""
-    token_counts = [len(tokens) for tokens
-                    in encoding.encode_ordinary_batch(sentences)]
+def split_long_sentences(sentences, encoding: Encoding, max_token_count):
     split_sentences = []
+    segmenter = Segmenter(language='vi', clean=False)  # Thêm language='vi'
+    
+    token_counts = [len(tokens) for tokens in encoding.encode_ordinary_batch(sentences)]
     for sentence, token_count in zip(sentences, token_counts):
         if token_count > max_token_count:
-            words = sentence.split()
+            # Sử dụng segmenter cho tiếng Việt
+            try:
+                sub_sents = segmenter.segment(sentence)
+            except:
+                sub_sents = sentence.split('.')  # Fallback
+            
             segments = combine_text_subunits_into_segments(
-                words, ' ', encoding, max_token_count)
+                sub_sents, ' ', encoding, max_token_count)
             split_sentences.extend(segments)
         else:
             split_sentences.append(sentence)
+    
     return split_sentences
 
 
@@ -158,7 +163,7 @@ def save_openai_api_responses_for_script(script, prompt, idx, save_path):
         chapter_segments = chapter['text']
         chapter_segment_count = len(chapter_segments)
         for chapter_segment_index, chapter_segment in enumerate(chapter_segments):
-            prompt_with_story = prompt.replace('{STORY}', chapter_segment)
+            prompt_with_story = prompt.replace('{}', chapter_segment)
             response_save_path = get_response_save_path(
                 idx, save_path, project_gutenberg_id, chapter_index, chapter_segment_index,
                 chapter_segment_count)

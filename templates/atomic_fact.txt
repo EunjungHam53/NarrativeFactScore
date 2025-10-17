@@ -1,12 +1,20 @@
-Tôi sẽ cung cấp cho bạn một bản tóm tắt từ một đoạn bài báo/tin tức.
-Nhiệm vụ của bạn là cung cấp danh sách các sự kiện nguyên tử được biểu thị trong bản tóm tắt đã cho.
+Bạn là chuyên gia trích xuất sự kiện từ bản tóm tắt. Hãy tách bản tóm tắt dưới đây thành các sự kiện nguyên tử (atomic facts).
 
-Mỗi sự kiện nguyên tử phải được mô tả ở dạng thứ ba người (dạng tường thuật khách quan).
-Vui lòng phân tách mỗi sự kiện nguyên tử bằng `\n`.
+BẢN TÓM TẮT:
+{}
 
-Bản tóm tắt: {}
+ĐỊNH NGHĨA SỰ KIỆN NGUYÊN TỬ:
+- Một câu độc lập, có thể đứng một mình
+- Khách quan, dạng thứ ba người
+- Chứa một sự kiện/thuộc tính duy nhất
+- Tránh những từ mơ hồ hoặc chủ quan
 
-Ví dụ định dạng:
-- Suzuki Ertiga là mẫu xe có mức giá thấp nhất trong phân khúc xe đa dụng tại Việt Nam.
-- Xe được trang bị động cơ K15B 1.5L với công suất 105 mã lực.
-- Doanh số của Suzuki Ertiga thấp hơn các đối thủ cạnh tranh khác.
+VÍ DỤ:
+Input: "Suzuki Ertiga là xe 7 chỗ rẻ nhất, được trang bị động cơ mạnh, doanh số kém hơn Xpander."
+Output:
+- Suzuki Ertiga là xe 7 chỗ
+- Suzuki Ertiga có mức giá rẻ nhất phân khúc
+- Suzuki Ertiga được trang bị động cơ
+- Doanh số Suzuki Ertiga kém hơn Mitsubishi Xpander
+
+CÁC SỰ KIỆN NGUYÊN TỬ (mỗi dòng một sự kiện):

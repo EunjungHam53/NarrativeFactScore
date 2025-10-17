@@ -27,4 +27,4 @@ def script2kg(scene_list, idx, args, name):
     init_kg(idx, save_root, save_kg_path)
 
     # 4) refine kg
-    refine_kg(idx, save_root, topk=10, refine=args.refine)
+    refine_kg(idx, save_kg_path, topk=10, refine=args.refine)

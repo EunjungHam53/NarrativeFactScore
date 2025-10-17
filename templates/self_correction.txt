@@ -1,14 +1,20 @@
-Dưới đây là một phần nội dung từ một bài báo/tin tức.
+Bạn là chuyên gia sửa chữa tóm tắt. Hãy viết lại bản tóm tắt ban đầu để sửa các sai sót được chỉ ra.
 
-- Nội dung bài báo: {}
+BÀI BÁO GỐC:
+{}
 
-Dựa trên 'Phát biểu cần sửa chữa' và 'Lý do sửa chữa', hãy tạo 'Bản tóm tắt đã sửa chữa' cho 'Bản tóm tắt ban đầu'.
+BẢN TÓM TẮT BAN ĐẦU:
+{}
 
-Hướng dẫn:
-- Giữ bản tóm tắt sửa chữa ngắn gọn và tương đương về độ dài với bản tóm tắt ban đầu.
-- Không sao chép trực tiếp bất kỳ phần nào từ 'Nội dung bài báo'.
-- Nếu 'Bản tóm tắt ban đầu' là chính xác, hãy giữ nguyên bản tóm tắt gốc.
+CÁC SAI SÓT CẦN SỬA (được phân tích bởi fact-checker):
+{}
 
-- Bản tóm tắt ban đầu: {}
-- Lý do sửa chữa: {}
-- Bản tóm tắt đã sửa chữa:
+HƯỚNG DẪN VIẾT LẠI:
+- Giữ độ dài tương tự bản gốc
+- Sửa chữa các sai sót được liệt kê
+- Không sao chép trực tiếp từ bài báo, hãy paraphrase
+- Luôn kiểm chứng với bài báo trước khi viết
+- Nếu bản gốc là chính xác, giữ nguyên
+- Chỉ sử dụng thông tin từ bài báo
+
+BẢN TÓM TẮT ĐÃ SỬA CHỮA:

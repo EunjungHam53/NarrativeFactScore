@@ -1,6 +1,10 @@
 import os
 from typing import List, Optional
 
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 def build_fact_prompt(
     prompt_template:str,
@@ -23,8 +27,12 @@ def build_fact_prompt(
     # 예외처리 필요
     assert isinstance(prompt_template, str)
     
-    prompt = prompt_template.format(*input_text_list)
-    
+    try:
+        prompt = prompt_template.format(*input_text_list)
+    except (IndexError, KeyError) as e:
+        logger.error(f"Format error: {e}")
+        prompt = prompt_template
+
     if chat_mode == "hf-chat":
         prompt = _get_hf_chat_template().format(prompt)
     elif chat_mode == "kullm":

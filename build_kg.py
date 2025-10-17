@@ -21,8 +21,14 @@ def main():
     # 2) build kg
     kg_list = []
     for idx, elem in enumerate(tqdm(data)):
-        kg = script2kg(elem['scenes'], idx, args, elem['name'])
-        kg_list.append(kg)
+        script2kg(elem['scenes'], idx, args, elem['name'])
+
+        # Hoặc nếu cần tracking:
+        try:
+            kg = script2kg(elem['scenes'], idx, args, elem['name'])
+            print(f"Successfully processed {idx}: {elem['name']}")
+        except Exception as e:
+            print(f"Failed to process {idx}: {str(e)}")
 
 if __name__ == "__main__":
     main()

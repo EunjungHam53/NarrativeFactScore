@@ -76,13 +76,13 @@ def main():
             feedbacks = np.array(factscore_chunk['feedbacks'])[hallu_idxs]
 
             ## 2> make prompt
+            feedback_text = "\n".join([f"- Sai sót {j+1}: {hallu_summ} (Lý do: {feedback})" 
+                                        for j, (hallu_summ, feedback) in enumerate(zip(hallu_summary_parts, feedbacks))])
+
             prompt = build_summarizer_prompt(
                 prompt_template="./templates/self_correction.txt",
-                input_text_list=[src_chunk, summary],
+                input_text_list=[src_chunk, summary, feedback_text]
             )
-            for j, (hallu_summ, feedback) in enumerate(zip(hallu_summary_parts, feedbacks)):
-                prompt += f"\n- Statement to Revise {j+1}: {hallu_summ} (Reason for Revision: {feedback})"
-            prompt += f"\n- Revised Summary: "
 
             org_summ_list.append(summary)
             hallu_part_list.append(hallu_summary_parts)

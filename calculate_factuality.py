@@ -6,6 +6,10 @@ import random
 from tqdm import tqdm
 import torch
 
+import logging
+# Configure logging
+logger = logging.getLogger(__name__)
+
 from src.fact.narrativefactscore import NarrativeFactScore
 
 def _set_seed(seed):
@@ -38,18 +42,31 @@ def main():
         data = [json.loads(line) for line in f]
     with open(args.summary_path, 'r', encoding='utf8') as f:
         summary_data = json.load(f)
+
     kg_list = []
     kg_dirs = os.listdir(args.kg_path)
     for kg_dir in kg_dirs:
-        with open(f'{args.kg_path}/{kg_dir}/3_knowledge_graphs/final_kg.jsonl', 'r', encoding='utf8') as f:
-            kg_data = [json.loads(line) for line in f]
-        kg_elem = []
-        for elem in kg_data:
-            if elem['subject'] == elem['object']:
-                kg_elem.append(f"{elem['subject']} {elem['predicate']}")
-            else:
-                kg_elem.append(f"{elem['subject']} {elem['predicate']} {elem['object']}")
-        kg_list.append(kg_elem)
+        kg_file_path = f'{args.kg_path}/{kg_dir}/3_knowledge_graphs/final_kg.jsonl'
+        
+        # ← Thêm kiểm tra file
+        if not os.path.exists(kg_file_path):
+            logger.warning(f"KG file not found: {kg_file_path}")
+            kg_list.append([])
+            continue
+        
+        try:
+            with open(kg_file_path, 'r', encoding='utf8') as f:
+                kg_data = [json.loads(line) for line in f]
+            kg_elem = []
+            for elem in kg_data:
+                if elem['subject'] == elem['object']:
+                    kg_elem.append(f"{elem['subject']} {elem['predicate']}")
+                else:
+                    kg_elem.append(f"{elem['subject']} {elem['predicate']} {elem['object']}")
+            kg_list.append(kg_elem)
+        except Exception as e:
+            logger.error(f"Error loading KG from {kg_file_path}: {str(e)}")
+            kg_list.append([])
 
     # 2) load scorer
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

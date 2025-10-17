@@ -57,7 +57,7 @@ def main():
             chunk = preprocess_script(chunk)
             prompt = build_summarizer_prompt(
                 prompt_template="./templates/external_summary.txt",
-                input_text_list=[chunk]
+                input_text_list=[chunk.strip()]
             )
             script_summ = scripty_summarizer.inference_with_gpt(prompt=prompt)
             script_summaries.append(script_summ.strip())

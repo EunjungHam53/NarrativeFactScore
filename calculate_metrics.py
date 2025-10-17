@@ -217,7 +217,7 @@ def main():
         'total_bleu': np.mean(bleu_list), 
         'total_rouge_1': np.mean(rouge_1_list), 
         'total_rouge_2': np.mean(rouge_2_list), 
-        'total_rouge_L': np.mean(rouge_L), 
+        'total_rouge_L': np.mean(rouge_L_list), 
         'total_bert_score_p': np.mean(bert_score_p_list), 
         'total_bert_score_r': np.mean(bert_score_r_list), 
         'total_bert_score_f1': np.mean(bert_score_f1_list), 

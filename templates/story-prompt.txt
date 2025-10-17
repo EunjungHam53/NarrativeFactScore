@@ -1,37 +1,52 @@
-Đọc một phần nội dung bài báo/tin tức, sau đó xác định các thực thể được đặt tên và tạo các cạnh của đồ thị kiến thức.
+Bạn là chuyên gia trích xuất thực thể và xây dựng đồ thị kiến thức từ bài báo tin tức tiếng Việt.
 
-<Hướng dẫn quan trọng>
-- Không sử dụng hoặc tham chiếu đến nội dung, tên hoặc thực thể từ ví dụ được cung cấp dưới đây trong phản hồi của bạn.
-- Chỉ áp dụng quy trình xác định các thực thể được đặt tên và tạo các cạnh đồ thị kiến thức cho đoạn bài báo mới được cung cấp.
+BÀI BÁO:
+{}
 
-<Ví dụ> (chỉ để tham khảo, không sử dụng trong phản hồi):
+NHIỆM VỤ:
+1. Xác định TẤT CẢ các thực thể được đặt tên (named entities):
+   - Tên sản phẩm, mẫu xe, dòng sản phẩm
+   - Tên thương hiệu, nhà sản xuất
+   - Thị trường, khu vực địa lý
+   - Các con số, giá cả, thông số kỹ thuật
+   
+2. Ghi lại tất cả các tên gọi khác (alias/biến thể) của mỗi thực thể
 
-[Bắt đầu đoạn bài báo]
-Tại thị trường Việt Nam, phân khúc xe đa dụng là phân khúc khá ăn khách và có tính cạnh tranh cao. Suzuki Ertiga được xem là có mức giá rẻ nhất trong phân khúc này. Cụ thể, Suzuki Ertiga phiên bản số sàn hiện đang được niêm yết ở mức 499,9 triệu đồng. Xe sử dụng động cơ K15B 1.5L, cho công suất 105 mã lực. Mitsubishi Xpander là mẫu xe bán chạy nhất phân khúc, ngược lại thì Ertiga là mẫu xe có doanh số thấp nhất.
-[Kết thúc đoạn bài báo]
+3. Tạo mối quan hệ (edges) giữa các thực thể dưới dạng:
+   [chủ thể]; [vị từ 1-2 từ]; [đối tượng]
 
-Các thực thể được đặt tên (bao gồm tất cả các biệt danh và biến thể tên):
-- Suzuki Ertiga
+VÍ DỤ:
+Bài báo: "Suzuki Ertiga phiên bản số sàn được niêm yết 499,9 triệu đồng. Xe sử dụng động cơ K15B 1.5L với 105 mã lực. Mitsubishi Xpander bán chạy hơn."
+
+Thực thể & alias:
+- Suzuki Ertiga / Ertiga
 - Suzuki
-- Mitsubishi Xpander
+- Mitsubishi Xpander / Xpander
 - Mitsubishi
+- Động cơ K15B 1.5L
 - Phân khúc xe đa dụng
-- Thị trường Việt Nam
+
+Edges (tối đa 15):
+1. Suzuki Ertiga; phiên bản; số sàn
+2. Suzuki Ertiga; giá bán; 499,9 triệu đồng
+3. Suzuki Ertiga; trang bị; động cơ K15B 1.5L
+4. Động cơ K15B 1.5L; công suất; 105 mã lực
+5. Suzuki Ertiga; cạnh tranh với; Mitsubishi Xpander
+6. Mitsubishi Xpander; bán chạy hơn; Suzuki Ertiga
+7. Suzuki Ertiga; thuộc phân khúc; xe đa dụng
+8. Suzuki; sản xuất; Suzuki Ertiga
+9. Mitsubishi; sản xuất; Mitsubishi Xpander
+
+ĐỊNH DẠNG ĐẦU RA:
+
+**Thực thể được đặt tên (Entity & Aliases):**
+- Suzuki Ertiga / Ertiga
+- Suzuki
+- Mitsubishi Xpander / Xpander
+- Mitsubishi
 - Động cơ K15B 1.5L
 
-Các cạnh đồ thị kiến thức (chọn tối đa 20 cạnh quan trọng nhất, định dạng `chủ thể(s); vị từ; [đối tượng(s)]`, chỉ các thực thể được đặt tên, vị từ: hai từ hoặc ít hơn):
-1. Suzuki Ertiga; là sản phẩm của; Suzuki
-2. Suzuki Ertiga; thuộc phân khúc; Xe đa dụng
-3. Suzuki Ertiga; có giá bán; 499,9 triệu đồng
-4. Suzuki Ertiga; trang bị; Động cơ K15B 1.5L
-5. Động cơ K15B 1.5L; có công suất; 105 mã lực
-6. Suzuki Ertiga; có mức giá; thấp nhất phân khúc
-7. Mitsubishi Xpander; cạnh tranh với; Suzuki Ertiga
-8. Mitsubishi Xpander; bán chạy nhất; Phân khúc xe đa dụng
-9. Suzuki Ertiga; doanh số; thấp nhất phân khúc
-10. Phân khúc xe đa dụng; nằm ở; Thị trường Việt Nam
-
-<Yêu cầu>
-[Bắt đầu đoạn bài báo]
-{ARTICLE}
-[Kết thúc đoạn bài báo]
+**Các cạnh đồ thị kiến thức (Knowledge Graph Edges):**
+1. Suzuki Ertiga; phiên bản; số sàn
+2. Suzuki Ertiga; giá bán; 499,9 triệu đồng
+3. Suzuki Ertiga; trang bị; động cơ K15B 1.5L

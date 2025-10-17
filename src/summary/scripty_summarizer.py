@@ -24,11 +24,17 @@ class ScriptySummarizer:
             model = genai.GenerativeModel(self.model)
             response = model.generate_content(
                 prompt,
-                generation_config=genai.types.GenerationConfig(temperature=0.01)
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.01,
+                    max_output_tokens=2048  # ← Thêm limit để tránh timeout
+                )
             )
-            response = response.text
-        except Exception:
-            response = ''
-        
-        return response
+            response = response.text.strip()
+            if not response:
+                logger.warning("API returned empty response")
+                return ""
+            return response
+        except Exception as e:
+            logger.error(f"Error in inference_with_gpt: {str(e)}")
+            return ""
     
