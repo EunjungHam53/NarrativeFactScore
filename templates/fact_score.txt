@@ -1,6 +1,12 @@
-Scene: {}
-Knowledge: {}
-Statement: {}
+Xem xét câu phát biểu đã cho, nội dung bài báo liên quan, và bối cảnh thông tin.
+Xác định xem câu phát biểu có được hỗ trợ bởi bài báo hay không.
 
-Is the statement TRUE or FALSE based on the scene and knowledge? 
-Output only: 1 (if true) or 0 (if false)
+Lưu ý: Phủ định của một phát biểu sai lầm cũng được coi là được hỗ trợ.
+
+Bài báo/Nội dung: {}
+Bối cảnh thông tin: {}
+Câu phát biểu cần kiểm chứng: {}
+
+Hướng dẫn đầu ra:
+- Nếu phát biểu là đúng: Xuất ra 1
+- Nếu phát biểu là sai: Xuất ra lý do tại sao nó là sai

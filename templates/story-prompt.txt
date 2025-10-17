@@ -1,39 +1,37 @@
-Read the following story excerpt carefully. Extract:
+Đọc một phần nội dung bài báo/tin tức, sau đó xác định các thực thể được đặt tên và tạo các cạnh của đồ thị kiến thức.
 
-1. Named entities: List all character names and variations (aliases)
-2. Knowledge graph edges: List relationships in format "subject; predicate; object"
+<Hướng dẫn quan trọng>
+- Không sử dụng hoặc tham chiếu đến nội dung, tên hoặc thực thể từ ví dụ được cung cấp dưới đây trong phản hồi của bạn.
+- Chỉ áp dụng quy trình xác định các thực thể được đặt tên và tạo các cạnh đồ thị kiến thức cho đoạn bài báo mới được cung cấp.
 
-IMPORTANT OUTPUT FORMAT:
-- Start "Named entities:" section with list of unique entities
-- Start "Knowledge graph edges:" section with numbered list (max 15 edges)
-- Each edge format: NUMBER. subject; predicate; object
-- Use simple predicates (2 words max): is, knows, loves, fights, helps, located in, etc.
+<Ví dụ> (chỉ để tham khảo, không sử dụng trong phản hồi):
 
-Story: {}
+[Bắt đầu đoạn bài báo]
+Tại thị trường Việt Nam, phân khúc xe đa dụng là phân khúc khá ăn khách và có tính cạnh tranh cao. Suzuki Ertiga được xem là có mức giá rẻ nhất trong phân khúc này. Cụ thể, Suzuki Ertiga phiên bản số sàn hiện đang được niêm yết ở mức 499,9 triệu đồng. Xe sử dụng động cơ K15B 1.5L, cho công suất 105 mã lực. Mitsubishi Xpander là mẫu xe bán chạy nhất phân khúc, ngược lại thì Ertiga là mẫu xe có doanh số thấp nhất.
+[Kết thúc đoạn bài báo]
 
-Output exactly in this format:
+Các thực thể được đặt tên (bao gồm tất cả các biệt danh và biến thể tên):
+- Suzuki Ertiga
+- Suzuki
+- Mitsubishi Xpander
+- Mitsubishi
+- Phân khúc xe đa dụng
+- Thị trường Việt Nam
+- Động cơ K15B 1.5L
 
-Named entities:
-Jo / Jo March
-Meg / Margaret / Margaret March
-Amy
-Beth / Elizabeth
-March sisters
-Mrs. March / Marmee / Mother
-Father
-Concord
-Union Army
+Các cạnh đồ thị kiến thức (chọn tối đa 20 cạnh quan trọng nhất, định dạng `chủ thể(s); vị từ; [đối tượng(s)]`, chỉ các thực thể được đặt tên, vị từ: hai từ hoặc ít hơn):
+1. Suzuki Ertiga; là sản phẩm của; Suzuki
+2. Suzuki Ertiga; thuộc phân khúc; Xe đa dụng
+3. Suzuki Ertiga; có giá bán; 499,9 triệu đồng
+4. Suzuki Ertiga; trang bị; Động cơ K15B 1.5L
+5. Động cơ K15B 1.5L; có công suất; 105 mã lực
+6. Suzuki Ertiga; có mức giá; thấp nhất phân khúc
+7. Mitsubishi Xpander; cạnh tranh với; Suzuki Ertiga
+8. Mitsubishi Xpander; bán chạy nhất; Phân khúc xe đa dụng
+9. Suzuki Ertiga; doanh số; thấp nhất phân khúc
+10. Phân khúc xe đa dụng; nằm ở; Thị trường Việt Nam
 
-Knowledge graph edges:
-1. Jo, Meg, Amy, Beth; in; March sisters
-2. March sisters; daughters of; Mrs. March, Father
-3. Mrs. March; mother of; March sisters
-4. Father; father of; March sisters
-5. March sisters, Mrs. March; living in; Concord
-6. Father; fighting in war
-7. Father; chaplain in; Union Army
-8. Meg; sixteen years
-9. Jo; fifteen years
-10. Beth; thirteen years
-11. Beth; shy
-12. Amy; youngest among; March sisters
+<Yêu cầu>
+[Bắt đầu đoạn bài báo]
+{ARTICLE}
+[Kết thúc đoạn bài báo]

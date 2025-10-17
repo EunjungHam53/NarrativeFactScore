@@ -1,7 +1,14 @@
-Script: {}
+Dưới đây là một phần nội dung từ một bài báo/tin tức.
 
-Original Summary: {}
+- Nội dung bài báo: {}
 
-Revise the summary to be accurate with the script. Keep it short (2-5 sentences).
+Dựa trên 'Phát biểu cần sửa chữa' và 'Lý do sửa chữa', hãy tạo 'Bản tóm tắt đã sửa chữa' cho 'Bản tóm tắt ban đầu'.
 
-Revised Summary:
+Hướng dẫn:
+- Giữ bản tóm tắt sửa chữa ngắn gọn và tương đương về độ dài với bản tóm tắt ban đầu.
+- Không sao chép trực tiếp bất kỳ phần nào từ 'Nội dung bài báo'.
+- Nếu 'Bản tóm tắt ban đầu' là chính xác, hãy giữ nguyên bản tóm tắt gốc.
+
+- Bản tóm tắt ban đầu: {}
+- Lý do sửa chữa: {}
+- Bản tóm tắt đã sửa chữa:

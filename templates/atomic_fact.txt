@@ -1,5 +1,12 @@
-Extract atomic facts from this summary. Each fact should be a simple sentence in third-person.
-Separate each fact with a newline.
-Summary: {}
+Tôi sẽ cung cấp cho bạn một bản tóm tắt từ một đoạn bài báo/tin tức.
+Nhiệm vụ của bạn là cung cấp danh sách các sự kiện nguyên tử được biểu thị trong bản tóm tắt đã cho.
 
-Facts:
+Mỗi sự kiện nguyên tử phải được mô tả ở dạng thứ ba người (dạng tường thuật khách quan).
+Vui lòng phân tách mỗi sự kiện nguyên tử bằng `\n`.
+
+Bản tóm tắt: {}
+
+Ví dụ định dạng:
+- Suzuki Ertiga là mẫu xe có mức giá thấp nhất trong phân khúc xe đa dụng tại Việt Nam.
+- Xe được trang bị động cơ K15B 1.5L với công suất 105 mã lực.
+- Doanh số của Suzuki Ertiga thấp hơn các đối thủ cạnh tranh khác.

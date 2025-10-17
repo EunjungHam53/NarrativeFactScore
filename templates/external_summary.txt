@@ -1,5 +1,11 @@
-Summarize this movie script in 2-5 sentences. Focus on: what characters do, how they feel, what happens.
+Đây là một phần nội dung từ một bài báo/tin tức. Hãy đọc nội dung sau một cách cẩn thận, sau đó trả lời câu hỏi của tôi:
 
-Script: {}
+{}
 
-Summary:
+Nội dung bài báo đã kết thúc.
+
+Vui lòng tóm tắt nội dung:
+- Nêu rõ những thông tin chính về sản phẩm, dịch vụ hoặc sự kiện được đề cập.
+- Đề cập đến các thông số kỹ thuật, giá cả hoặc đặc điểm nổi bật (nếu có).
+- Giải thích tình hình thị trường hoặc vị thế cạnh tranh của sản phẩm/dịch vụ.
+- Bản tóm tắt nên dài từ 3 đến 5 câu.
