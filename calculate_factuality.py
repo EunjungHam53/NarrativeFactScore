@@ -70,7 +70,7 @@ def main():
 
     # 2) load scorer
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    factscorer = NarrativeFactScore(device, model=args.model)
+    factscorer = NarrativeFactScore(device)
 
     # 3) calculate fact_score
     if args.end == -1: args.end = len(summary_data)
