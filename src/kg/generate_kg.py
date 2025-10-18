@@ -204,11 +204,24 @@ def init_kg(idx, save_root, kg_path):
     save_knowledge_graph(knowledge_graph, project_gutenberg_id, kg_path)
 
 def refine_kg(idx, kg_path, topk, refine='ner'):
+    """
+    Refine knowledge graph: lọc top-k nodes và lưu edges
+    
+    ========== SỬA: Loại bỏ điều kiện count >= 2 ==========
+    """
     # 1) load data
     input_path = f'{kg_path}/3_knowledge_graphs/kg.pkl'
+    if not os.path.exists(input_path):
+        logger.error(f'KG pickle file not found: {input_path}')
+        return
+    
     with open(input_path, 'rb') as f:
         knowledge_graph = pickle.load(f)
+    
     save_path = f'{kg_path}/3_knowledge_graphs/refined_kg.html'
+    
+    logger.info(f'refine_kg: Khởi tạo với topk={topk}')
+    logger.info(f'refine_kg: Knowledge graph có {knowledge_graph.number_of_nodes()} nodes, {knowledge_graph.number_of_edges()} edges')
     
     # 2) refine kg
     # Calculate the number of edges for each node.
@@ -221,6 +234,7 @@ def refine_kg(idx, kg_path, topk, refine='ner'):
 
     # Select the top k nodes with the most edges.
     top_k_nodes = [node for node, count in edge_count.most_common(topk)]
+    logger.info(f'refine_kg: Top {topk} nodes: {top_k_nodes[:5]}')
 
     # Collect all relationships between the top k nodes.
     rel_dict = {}
@@ -235,32 +249,53 @@ def refine_kg(idx, kg_path, topk, refine='ner'):
             if key not in rel_dict:
                 rel_dict[key] = []
             rel_dict[key].append((predicate, chapter_index, count))
-
+    
+    # ========== SỬA: Debug thông tin ==========
+    logger.info(f'refine_kg: rel_dict size: {len(rel_dict)}')
+    if not rel_dict:
+        logger.warning(f'refine_kg: rel_dict RỖNG! Không có edges giữa top {topk} nodes')
+        logger.warning(f'refine_kg: Kiểm tra top_k_nodes: {[str(n) for n in top_k_nodes[:3]]}')
+    
     # Visualization code
     pyvis_graph = nx.MultiDiGraph()
     for node in top_k_nodes:
         pyvis_graph.add_node(node, label=node, shape='box')
 
+    edge_count_pyvis = 0
     for key, relations in rel_dict.items():
         subject, object_ = key.split('\t')
         for relation in relations:
             predicate, chapter_index, count = relation
             if 'output' in predicate:
                 continue
-            if count >= 2:
+            if count >= 2:  # Điều kiện cho visualization
                 if pyvis_graph.has_edge(subject, object_):
                     pyvis_graph[subject][object_][0]['title'] += f', {predicate}'
                 else:
                     pyvis_graph.add_edge(subject, object_, title=f'{predicate}')
+                edge_count_pyvis += 1
 
+    logger.info(f'refine_kg: Edges trong visualization: {edge_count_pyvis}')
+    
     network = Network(height='99vh', directed=True, bgcolor='#262626', cdn_resources='remote')
     network.from_nx(pyvis_graph)
 
     with redirect_stdout(None):
         network.show(str(save_path), notebook=False)
 
-    # Save relationships and nodes to a jsonl file
+    logger.info(f'Saved pyvis knowledge graph to {save_path}.')
+
+    # ========== SỬA: Lưu final_kg.jsonl - Loại bỏ điều kiện count >= 2 ==========
+    # Sửa từ:
+    # if count >= 2:
+    #     f.write(json.dumps(relationship, ensure_ascii=False) + '\n')
+    
+    # Thành: Lưu tất cả edges
+    
     root_path = Path(f'{kg_path}/3_knowledge_graphs')
+    os.makedirs(root_path, exist_ok=True)
+    
+    total_written = 0
     with open(root_path / 'final_kg.jsonl', 'w', encoding='utf-8') as f:
         for key, relations in rel_dict.items():
             subject, object_ = key.split('\t')
@@ -278,8 +313,17 @@ def refine_kg(idx, kg_path, topk, refine='ner'):
                     'object': object_,
                     'chapter_index': chapter_index,
                     'count': count,
-                    'subject_node_count': edge_count[subject],  # Add the number of edges for the subject node
-                    'object_node_count': edge_count[object_]    # Add the number of edges for the object node
+                    'subject_node_count': edge_count[subject],
+                    'object_node_count': edge_count[object_]
                 }
-                if count >= 2:
-                    f.write(json.dumps(relationship, ensure_ascii=False) + '\n')
+                
+                # ========== SỬA: LƯU TẤT CẢ, không có điều kiện ==========
+                # Sửa từ: if count >= 2:
+                # Thành: Lưu trực tiếp
+                f.write(json.dumps(relationship, ensure_ascii=False) + '\n')
+                total_written += 1
+    
+    logger.info(f'refine_kg: Đã lưu {total_written} edges vào final_kg.jsonl')
+    
+    if total_written == 0:
+        logger.error('refine_kg: CẢNH BÁO - final_kg.jsonl RỖNG!')
