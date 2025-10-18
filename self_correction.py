@@ -11,6 +11,11 @@ from src.summary.scripty_summarizer import ScriptySummarizer
 from src.summary.utils import chunk_script, preprocess_script
 from src.summary.prompt import build_summarizer_prompt
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def _set_seed(seed):
     np.random.seed(seed)
     random.seed(seed)
@@ -55,6 +60,9 @@ def main():
         model=args.model,
         seed=42,
     )
+
+    api_status = scripty_summarizer.get_api_status()
+    logger.info(f"API Status: {api_status}")
         
     # 3) self_correction
     final_datasets = []

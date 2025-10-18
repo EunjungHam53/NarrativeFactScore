@@ -167,16 +167,24 @@ class GPTScore():
             )
             try:
                 score = self.gpt_inference(prompt)
-                if '1' in score:
+                score_cleaned = score.strip()
+
+                if score_cleaned == '1':
+                    # Phát biểu đúng/hỗ trợ bởi bài báo/KG
                     score_list.append(float(1))
                     feedback_list.append('')
+                elif score_cleaned.lower() == 'không có thông tin':
+                    # Không thể xác định từ bài báo/KG
+                    score_list.append(float(0.5))  # Điểm trung bình
+                    feedback_list.append(score_cleaned)
                 else:
+                    # Phát biểu sai hoặc mâu thuẫn
                     score_list.append(float(0))
-                    feedback_list.append(score)
+                    feedback_list.append(score_cleaned)
             
             except RuntimeError:
                 traceback.print_exc()
-                print(f"source: {src_list}")
-                print(f"target: {tgt_list}")
+                print(f"source: {src}")
+                print(f"target: {tgt}")
                 exit(0)
         return score_list, feedback_list

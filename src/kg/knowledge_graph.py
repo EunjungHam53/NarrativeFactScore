@@ -53,11 +53,17 @@ def parse_response_text(response_text, identifier, are_edges_numbered=True):
     
     for i, line in enumerate(lines):
         line_lower = line.lower()
-        if any(keyword in line_lower for keyword in 
-               ['named entities', 'thực thể được đặt tên', 'các thực thể']):
+        # Tìm section "Entity & Aliases" (tiếng Anh và Việt)
+        if any(keyword in line_lower for keyword in [
+            'named entities', 'entity & aliases', 'entities & aliases',
+            'thực thể được đặt tên', 'các thực thể', 'entity'
+        ]):
             names_idx = i
-        if any(keyword in line_lower for keyword in 
-               ['knowledge graph', 'đồ thị kiến thức', 'các cạnh']):
+        # Tìm section "Knowledge Graph Edges" (tiếng Anh và Việt)
+        if any(keyword in line_lower for keyword in [
+            'knowledge graph', 'knowledge graph edges',
+            'đồ thị kiến thức', 'các cạnh', 'edges'
+        ]):
             edges_idx = i
     
     if names_idx == -1:
@@ -77,8 +83,14 @@ def parse_response_text(response_text, identifier, are_edges_numbered=True):
         if line.startswith('-'):
             line = line[1:].strip()
         if line:
-            name_group = strip_and_remove_empty_strings(line.split(' / '))
-            if name_group:
+            if ' / ' in line:
+                # Có alias: "Suzuki Ertiga / Ertiga"
+                name_group = [n.strip() for n in line.split(' / ') if n.strip()]
+            else:
+                # Không có alias: "Suzuki"
+                name_group = [line.strip()]
+
+            if name_group and name_group[0]:  # Kiểm tra phần tử đầu không rỗng
                 names.append(name_group)
     
     # Parse edges section
@@ -88,24 +100,30 @@ def parse_response_text(response_text, identifier, are_edges_numbered=True):
         if not line:
             continue
         
-        # Remove number prefix if exists
+        # Loại bỏ số hiệu dạng "1. ", "2. ", v.v.
         if line and line[0].isdigit():
             line = re.sub(r'^\d+\.\s*', '', line)
         
-        # Split by semicolon
+        if not line:
+            continue
+        
+        # Template format: "subject; predicate; object"
         parts = [p.strip() for p in line.split(';')]
         
         if len(parts) < 2:
+            logger.warning(f'{identifier}: Malformed edge line: {line}')
             continue
         
         if len(parts) == 2:
-            subjects = [p.strip() for p in parts[0].split(',')]
-            predicate = parts[1]
+            # Format: "subject; predicate" (object = None)
+            subjects = [p.strip() for p in parts[0].split(',') if p.strip()]
+            predicate = parts[1].strip()
             objects = [None]
         elif len(parts) >= 3:
-            subjects = [p.strip() for p in parts[0].split(',')]
-            predicate = parts[1]
-            objects = [p.strip() for p in parts[2].split(',')]
+            # Format: "subject; predicate; object"
+            subjects = [p.strip() for p in parts[0].split(',') if p.strip()]
+            predicate = parts[1].strip()
+            objects = [p.strip() for p in parts[2].split(',') if p.strip()]
         
         for subject in subjects:
             for obj in objects:

@@ -33,9 +33,9 @@ def build_fact_prompt(
         logger.error(f"Format error: {e}")
         prompt = prompt_template
 
-    if chat_mode == "hf-chat":
-        prompt = _get_hf_chat_template().format(prompt)
-    elif chat_mode == "kullm":
-        prompt = _get_kullm_template().format(prompt)
+    # if chat_mode == "hf-chat":
+    #     prompt = _get_hf_chat_template().format(prompt)
+    # elif chat_mode == "kullm":
+    #     prompt = _get_kullm_template().format(prompt)
     
     return prompt

@@ -13,10 +13,24 @@ from tqdm import tqdm
 from contextlib import redirect_stdout
 
 import google.generativeai as genai
-from config import GEMINI_API_KEY, GEMINI_MODEL
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+from config import GEMINI_API_KEY, GEMINI_MODEL, GEMINI_API_KEYS, GEMINI_RPM_LIST, GEMINI_RPD_LIST
+try:
+    from api_key_manager import APIKeyManager
+    api_manager = APIKeyManager(GEMINI_API_KEYS, GEMINI_RPM_LIST, GEMINI_RPD_LIST)
+    USE_API_MANAGER = True
+    logger.info(f"✓ src/kg/generate_kg.py: Khởi tạo APIKeyManager với {len(GEMINI_API_KEYS)} keys")
+except Exception as e:
+    logger.warning(f"✗ src/kg/generate_kg.py: Không thể khởi tạo APIKeyManager: {e}")
+    USE_API_MANAGER = False
+    api_manager = None
+
 import time
 
-genai.configure(api_key=GEMINI_API_KEY)
 
 from .knowledge_graph import generate_knowledge_graph
 from .openai_api import load_response_text
@@ -28,10 +42,26 @@ KNOWLEDGE_GRAPHS_DIRECTORY_PATH = Path('../knowledge-graphs_new')
 
 
 def gpt_inference(system_instruction, prompt, retries=10, delay=5):
+    """
+    ========== SỬA: Thêm API Key Manager ==========
+    """
     combined_prompt = f"{system_instruction}\n\n{prompt}"
     
     for attempt in range(retries):
         try:
+            # ========== MỚI: Lấy API key động ==========
+            if USE_API_MANAGER:
+                current_api_key = api_manager.get_available_key(max_wait_time=300)
+                if not current_api_key:
+                    raise RuntimeError("Không có API key khả dụng")
+                logger.info(f'gpt_inference: Calling Gemini API...')
+            else:
+                current_api_key = GEMINI_API_KEY
+                logger.info(f'gpt_inference: Calling with default key...')
+            
+            # ========== MỚI: Cấu hình genai động ==========
+            genai.configure(api_key=current_api_key)
+            
             model = genai.GenerativeModel(GEMINI_MODEL)
             response = model.generate_content(
                 combined_prompt,
@@ -42,8 +72,17 @@ def gpt_inference(system_instruction, prompt, retries=10, delay=5):
                 )
             )
             result = response.text
+            
+            # ========== MỚI: Lưu state ==========
+            if USE_API_MANAGER:
+                try:
+                    api_manager.save_state('./logs/api_manager_state_kg_gpt.json')
+                except Exception as e:
+                    logger.warning(f"Không thể lưu API manager state: {e}")
+            
             return result
         except Exception as e:
+            logger.warning(f"Retry gpt_inference after error: {str(e)}")
             time.sleep(delay)
             continue
 

@@ -5,6 +5,10 @@ import numpy as np
 import random
 from tqdm import tqdm
 import torch
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from src.summary.scripty_summarizer import ScriptySummarizer
 from src.summary.utils import preprocess_script, chunk_script_gpt
@@ -42,6 +46,8 @@ def main():
         seed=42,
     )
 
+    api_status = scripty_summarizer.get_api_status()
+    logger.info(f"API Status: {api_status}")
 
     # 3) initial_summarization
     final_datasets = []
