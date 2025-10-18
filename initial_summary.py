@@ -103,6 +103,8 @@ def main():
         }
         final_datasets.append(processed_dataset)
 
+    os.makedirs(args.output_path, exist_ok=True)
+
     with open(f'{args.output_path}/summary.jsonl', 'w', encoding='utf-8') as f:
         for p_d in final_datasets:
             jsonline = json.dumps(p_d, ensure_ascii=False)

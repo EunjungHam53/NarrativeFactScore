@@ -126,6 +126,7 @@ def main():
             elem_dict_list.append(elem_dict)
         agg_dict['script'] = script
         agg_dict['summaries'] = ' '.join(script_summaries)#;import ipdb;ipdb.set_trace(context=10)
+        os.makedirs(args.output_path, exist_ok=True)
         save_path = f'{args.output_path}/{idx}_{data[idx]["name"]}'
         os.makedirs(save_path, exist_ok=True)
         with open(f'{save_path}/summary_sep.json', 'w') as f:
@@ -142,6 +143,7 @@ def main():
         }
         final_datasets.append(processed_dataset)
 
+        os.makedirs(args.output_path, exist_ok=True)
         with open(f'{args.output_path}/summary.jsonl', 'w', encoding='utf-8') as f:
             for p_d in final_datasets:
                 jsonline = json.dumps(p_d, ensure_ascii=False)
