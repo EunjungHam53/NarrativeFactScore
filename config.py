@@ -16,11 +16,11 @@ GEMINI_RPD_LIST = [
     int(os.getenv(f'GEMINI_RPD_{i}', '10000')) for i in range(1, 11)
 ][:len(GEMINI_API_KEYS)]
 
-if len(set(GEMINI_RPM_LIST)) == 1 and GEMINI_RPM_LIST:
-    GEMINI_RPM_LIST = GEMINI_RPM_LIST[0]
+# if len(set(GEMINI_RPM_LIST)) == 1 and GEMINI_RPM_LIST:
+#     GEMINI_RPM_LIST = GEMINI_RPM_LIST[0]
 
-if len(set(GEMINI_RPD_LIST)) == 1 and GEMINI_RPD_LIST:
-    GEMINI_RPD_LIST = GEMINI_RPD_LIST[0]
+# if len(set(GEMINI_RPD_LIST)) == 1 and GEMINI_RPD_LIST:
+#     GEMINI_RPD_LIST = GEMINI_RPD_LIST[0]
 
 MAX_INPUT_TOKENS = int(os.getenv('MAX_INPUT_TOKENS', '30000'))
 MAX_OUTPUT_TOKENS = int(os.getenv('MAX_OUTPUT_TOKENS', '4096'))
