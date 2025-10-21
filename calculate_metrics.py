@@ -12,8 +12,15 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 
 import nltk
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
-from rouge_score import rouge_scorer
+
 from bert_score.scorer import BERTScorer
+
+from rouge import Rouge
+from pyvi import ViTokenizer
+import logging
+# Configure logging
+logger = logging.getLogger(__name__)
+
 nltk.download('punkt')
 
 class BARTScorer:
@@ -135,18 +142,29 @@ def calculate_bleu(reference_summary, generated_summary):
     return bleu_score
 
 def calculate_rouge(reference_summary, generated_summary):
+    """
+    Tính ROUGE score cho tiếng Việt với word segmentation
+    """
+    # Tách từ tiếng Việt
+    reference_tokenized = ViTokenizer.tokenize(reference_summary)
+    generated_tokenized = ViTokenizer.tokenize(generated_summary)
+    
     # Create a ROUGE scorer
-    scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+    rouge = Rouge()
     
-    # Compute ROUGE scores
-    scores = scorer.score(reference_summary, generated_summary)
-    
-    # Extract the F1 scores for ROUGE-1, ROUGE-2, and ROUGE-L
-    rouge_1 = scores['rouge1'].fmeasure
-    rouge_2 = scores['rouge2'].fmeasure
-    rouge_l = scores['rougeL'].fmeasure
-    
-    return rouge_1, rouge_2, rouge_l
+    try:
+        # Compute ROUGE scores
+        scores = rouge.get_scores(generated_tokenized, reference_tokenized)[0]
+        
+        # Extract the F1 scores for ROUGE-1, ROUGE-2, and ROUGE-L
+        rouge_1 = scores['rouge-1']['f']
+        rouge_2 = scores['rouge-2']['f']
+        rouge_l = scores['rouge-l']['f']
+        
+        return rouge_1, rouge_2, rouge_l
+    except Exception as e:
+        logger.error(f"Error calculating ROUGE: {str(e)}")
+        return 0.0, 0.0, 0.0
 
 def calculate_bert_score(bert_scorer, reference_summary, generated_summary):
     p_sci, r_sci, f1_sci = bert_scorer.score([generated_summary], [reference_summary])

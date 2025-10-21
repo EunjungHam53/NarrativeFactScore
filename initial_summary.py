@@ -10,6 +10,11 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import google.generativeai as genai
+from config import GEMINI_API_KEY, GEMINI_MODEL
+
+genai.configure(api_key=GEMINI_API_KEY)
+
 from src.summary.scripty_summarizer import ScriptySummarizer
 from src.summary.utils import preprocess_script, chunk_script_gpt
 from src.summary.prompt import build_summarizer_prompt

@@ -2,7 +2,6 @@ import re
 from typing import List
 
 from transformers import AutoTokenizer
-from tiktoken import encoding_for_model
 
 SCENE_INDICATORS = ['SS##','S#','s#','S','s','#\d+.','\d+.']
 
@@ -64,15 +63,20 @@ def break_down2scenes(text: str):
 def chunk_script_gpt(script:str,
                     model:str,
                     chunk_size:int=-1) -> List[str]:
+    """
+    Chunk script based on token count.
+    Note: Gemini models don't use tiktoken, so we estimate tokens.
+    """
     if chunk_size == -1:
         chunks = [script]
         print("Single Inference Mode")
         return chunks
 
-    encoding = encoding_for_model(model)
+    # ========== SỬA: Gemini không dùng tiktoken ==========
+    # Gemini ước lượng: 1 token ≈ 4 ký tự (tiếng Việt)
+    # hoặc có thể dùng heuristic: len(text.split()) * 1.3
     
     scenes = break_down2scenes(script)
-    
     len_scenes = len(scenes)
 
     chunks = []
@@ -80,10 +84,13 @@ def chunk_script_gpt(script:str,
         print(f"Num of detected scenes : {len_scenes}")
 
         chunk = ""
+        # Ước lượng token bằng số từ * 1.3
         token_len_chunk = 0
         for i, scene_data in enumerate(scenes):
             scene = scene_data["text"].strip()
-            token_len_scene = len(encoding.encode_ordinary(scene))
+            # Ước lượng token cho Gemini: số từ * 1.3
+            token_len_scene = int(len(scene.split()) * 1.3)
+            
             if token_len_chunk + token_len_scene > chunk_size:
                 if token_len_chunk == 0:
                     chunk += scene
@@ -100,17 +107,19 @@ def chunk_script_gpt(script:str,
                 chunks.append(chunk)
     else:
         print(f"No Detected Scenes ({len_scenes})")
-        tokenized_script = encoding.encode_ordinary(script)
-        token_len_script = len(tokenized_script)
-
-        for start in range(0,token_len_script,chunk_size):
-            if start + chunk_size >= token_len_script:
-                end = token_len_script+1
-            else:
-                end = start+chunk_size
-            
-            chunk = encoding.decode(tokenized_script[start:end])
-        chunks.append(chunk)
+        # Ước lượng token cho toàn bộ script
+        words = script.split()
+        estimated_tokens = int(len(words) * 1.3)
+        
+        if estimated_tokens <= chunk_size:
+            chunks.append(script)
+        else:
+            # Chia script thành chunks dựa trên số từ
+            words_per_chunk = int(chunk_size / 1.3)
+            for start in range(0, len(words), words_per_chunk):
+                chunk_words = words[start:start + words_per_chunk]
+                chunks.append(' '.join(chunk_words))
+    
     print(f"Num of chunks : {len(chunks)}")
     return chunks
 

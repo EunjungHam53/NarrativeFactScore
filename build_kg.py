@@ -5,6 +5,10 @@ from tqdm import tqdm
 
 from src.kg.main import script2kg
 
+import logging
+# Configure logging
+logger = logging.getLogger(__name__)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,14 +25,13 @@ def main():
     # 2) build kg
     kg_list = []
     for idx, elem in enumerate(tqdm(data)):
-        script2kg(elem['scenes'], idx, args, elem['name'])
-
-        # Hoặc nếu cần tracking:
         try:
             kg = script2kg(elem['scenes'], idx, args, elem['name'])
-            print(f"Successfully processed {idx}: {elem['name']}")
+            kg_list.append(kg)
+            logger.info(f"✓ Successfully processed {idx}: {elem['name']}")
         except Exception as e:
-            print(f"Failed to process {idx}: {str(e)}")
+            logger.error(f"✗ Failed to process {idx} ({elem['name']}): {str(e)}")
+            kg_list.append(None)  # Thêm None để giữ index đúng
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,10 @@ import logging
 # Configure logging
 logger = logging.getLogger(__name__)
 
+import google.generativeai as genai
+from config import GEMINI_API_KEY, GEMINI_MODEL
+genai.configure(api_key=GEMINI_API_KEY)
+
 from src.fact.narrativefactscore import NarrativeFactScore
 
 def _set_seed(seed):
@@ -28,8 +32,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, required=True, help='Path to your data')
     parser.add_argument('--summary_path', type=str, required=True, help='Path to the summary')
-    parser.add_argument('--output_path', type=str, required=True, default='./dataset/MENSA/3_factscore/iter_0/gpt-4o-mini-2024-07-18/test', help='Path to save summaries')
-    parser.add_argument('--model', type=str, required=True, default='gpt-4o-mini-2024-07-18', help='Path to save summaries')
+    parser.add_argument('--output_path', type=str, required=True, default='./dataset/MENSA/3_factscore/iter_0/gemini-2.0-flash-lite/test', help='Path to save summaries')
+    parser.add_argument('--model', type=str, required=True, default='/gemini-2.0-flash-lite', help='Model name')
     parser.add_argument('--start', type=int, default=0)
     parser.add_argument('--end', type=int, default=-1)
     parser.add_argument('--kg_path', type=str, default='dataset/MENSA/1_kg/test')

@@ -4,6 +4,7 @@
 dataset=$1 #MovieSum, MENSA 
 type=$2 #train, validation, test
 iter=$3
+model=${GEMINI_MODEL:-models/gemini-2.0-flash-lite}
 
 if [ $iter -eq 0 ]; then
     summary_path=dataset/${dataset}/2_summary/${model}/${type}/summary.json

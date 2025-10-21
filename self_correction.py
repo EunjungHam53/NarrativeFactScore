@@ -16,6 +16,11 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+import google.generativeai as genai
+from config import GEMINI_API_KEY, GEMINI_MODEL
+
+genai.configure(api_key=GEMINI_API_KEY)
+
 def _set_seed(seed):
     np.random.seed(seed)
     random.seed(seed)
